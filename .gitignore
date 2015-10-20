@@ -1,3 +1,4 @@
 *.deb
 .theos
 *.sublime*
+.DS_Store
