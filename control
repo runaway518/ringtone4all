@@ -1,7 +1,7 @@
 Package: com.rington.fuk
 Name: AppSync Ringtone Plugin
-Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, vn.gsm.appsync70plus 
-Version: 1.0
+Depends: mobilesubstrate, com.rpetrich.rocketbootstrap 
+Version: 1.2
 Architecture: iphoneos-arm
 Description: Add ringtone to device!
 Maintainer: @runaway518
