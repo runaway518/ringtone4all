@@ -1,4 +1,4 @@
-Include Ringtone4All class in public directory to you project
+Include Ringtone4All class in public directory to your project
 
 ```objective-c
 
