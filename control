@@ -1,0 +1,11 @@
+Package: com.rington.fuk
+Name: AppSync Ringtone Plugin
+Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, vn.gsm.appsync70plus 
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Add ringtone to device!
+Maintainer: @runaway518
+Homepage: http://github.com/runaway518/ringtone4all
+Author: @runaway518
+Section: Tweaks
+Icon: file:///Library/PreferenceBundles/RingTone4All.bundle/icon.png

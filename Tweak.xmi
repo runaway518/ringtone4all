@@ -1,0 +1,43 @@
+#import "headers/SpringBoard.h"
+#import "headers/TLITunesTone.h"
+#import "headers/TLToneManager.h"
+#import "rocketbootstrap.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AppSupport/CPDistributedMessagingCenter.h>
+
+static NSString *randomStringWithLength(int len, NSString *type){
+	NSString *letters;
+	if ([type isEqualToString:@"PID"]){
+		letters = @"0123456789";
+	}else if([type isEqualToString:@"GUID"]){
+		letters = @"ABCDEF0123456789";
+	}else{
+		letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	}
+
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+
+    for (int i=0; i<len; i++) {
+         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random_uniform([letters length])]];
+    }
+
+    return randomString;
+}
+
+
+#include "hooks/SpringBoardHook.xm"
+#include "hooks/Ringtone4AllHook.xm"
+
+%ctor{
+	NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
+
+	if ([bundleID isEqualToString:@"com.apple.springboard"]){
+		%init(SpringBoard);
+	}else{
+		Class clazz = NSClassFromString(@"Ringtone4All");
+		if (clazz){
+			%init(Ringtone4All);
+		}
+	}	
+	
+}
