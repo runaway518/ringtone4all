@@ -42,18 +42,34 @@
     NSString* pid = randomStringWithLength(19,@"PID");
     NSString* guid = randomStringWithLength(16,@"GUID");;
     NSInteger protectedContent = 0;
-    NSString* ringName = [NSString stringWithFormat:@"%@.m4r", randomStringWithLength(4,@"name")];
+
+    NSError *error;
+
+    //Create folder if not exists
+    if (![fileManeger fileExistsAtPath:@"/var/mobile/Media/iTunes_Control"]){
+        [fileManeger createDirectoryAtPath:@"/var/mobile/Media/iTunes_Control" withIntermediateDirectories:NO attributes:nil error:&error];
+    }
+
+    if (![fileManeger fileExistsAtPath:@"/var/mobile/Media/iTunes_Control/Ringtones"]){
+        [fileManeger createDirectoryAtPath:@"/var/mobile/Media/iTunes_Control/Ringtones" withIntermediateDirectories:NO attributes:nil error:&error];
+    }
 
     //Copy file file to pid
-    NSString* ringTonePath = [NSString stringWithFormat:@"/var/mobile/Media/iTunes_Control/Ringtones/%@", ringName];
-    NSError *error;
-    [fileManeger copyItemAtPath:path toPath:ringTonePath error:&error];
-    if (error){
+    NSString* ringName;
+    NSString* ringTonePath;
+    do {
+        ringName = [NSString stringWithFormat:@"%@.m4r", randomStringWithLength(4,@"name")];
+        ringTonePath = [NSString stringWithFormat:@"/var/mobile/Media/iTunes_Control/Ringtones/%@", ringName];
+    }while([fileManeger fileExistsAtPath:ringTonePath]);
+
+    [fileManeger copyItemAtPath:path toPath:ringTonePath error:nil];
+    if (![fileManeger fileExistsAtPath:ringTonePath]){
         return;
     }
 
     NSDictionary* metadata = [[NSDictionary alloc] initWithObjectsAndKeys:guid, @"GUID", name, @"Name", pid, @"PID", protectedContent, @"Protected Content", audioDurationSeconds, @"Total Time", nil];
     TLToneManager* manager = [TLToneManager sharedToneManager];
+
     [manager _insertSyncedToneMetadata:metadata fileName:ringName];
 
     if (isDefault){
