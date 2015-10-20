@@ -5,15 +5,15 @@
     self = %orig;
     CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:@"com.dofuk.RingTone4All"];
     rocketbootstrap_distributedmessagingcenter_apply(center);
-    [center registerForMessageName:@"addRingtone" target:self selector:@selector(handleMessageNamed:withUserInfo:)];
+    [center registerForMessageName:@"addRingtone" target:self selector:@selector(processMessageNamed:withInfo:)];
     [center runServerOnCurrentThread];
     return self;
 }
 
 %new
--(NSDictionary*)handleMessageNamed: (NSString*)name withUserInfo: (NSDictionary*)userInfo{
+-(NSDictionary*)processMessageNamed: (NSString*)name withInfo: (NSDictionary*)info{
 	if ([name isEqualToString:@"addRingtone"]){
-        [self addRingtone:userInfo];
+        [self addRingtone:info];
 		return nil;
     }else{
         return nil;
