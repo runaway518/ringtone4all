@@ -1,4 +1,4 @@
 @interface SpringBoard : NSObject {
 }
-- (void) addRingtone: (NSDictionary*)ringTone;
+- (BOOL) addRingtone: (NSDictionary*)ringTone;
 @end

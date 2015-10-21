@@ -13,15 +13,15 @@
 %new
 -(NSDictionary*)processMessageNamed: (NSString*)name withInfo: (NSDictionary*)info{
 	if ([name isEqualToString:@"addRingtone"]){
-        [self addRingtone:info];
-		return nil;
+        NSNumber* status = [NSNumber numberWithBool:[self addRingtone:info]];
+        return [[NSDictionary alloc] initWithObjectsAndKeys:status, @"status", nil];
     }else{
         return nil;
     }
 }
 
 %new
-- (void) addRingtone: (NSDictionary*)ringTone{
+- (BOOL) addRingtone: (NSDictionary*)ringTone{
     NSString* name = [ringTone objectForKey:@"name"];
     NSString* path = [ringTone objectForKey:@"path"];
     BOOL isDefault = [[ringTone objectForKey:@"setDefault"] boolValue];
@@ -30,7 +30,7 @@
 
     //Check path exists
     if(![fileManeger fileExistsAtPath:path]){
-        return;
+        return NO;
     }
 
     //Get duration
@@ -64,18 +64,21 @@
 
     [fileManeger copyItemAtPath:path toPath:ringTonePath error:nil];
     if (![fileManeger fileExistsAtPath:ringTonePath]){
-        return;
+        return NO;
     }
 
     NSDictionary* metadata = [[NSDictionary alloc] initWithObjectsAndKeys:guid, @"GUID", name, @"Name", pid, @"PID", protectedContent, @"Protected Content", audioDurationSeconds, @"Total Time", nil];
     TLToneManager* manager = [TLToneManager sharedToneManager];
 
-    [manager _insertSyncedToneMetadata:metadata fileName:ringName];
-
-    if (isDefault){
-        NSString* identifier = [NSString stringWithFormat:@"itunes:%@",guid];
-        [manager setCurrentToneIdentifier:identifier forAlertType:1];
+    if([manager _insertSyncedToneMetadata:metadata fileName:ringName]){
+        if (isDefault){
+            NSString* identifier = [NSString stringWithFormat:@"itunes:%@",guid];
+            [manager setCurrentToneIdentifier:identifier forAlertType:1];
+        }
+        return YES;
     }
+
+    return NO;
 }
 %end
 %end

@@ -4,8 +4,8 @@
     return FALSE;
 }
 
-+(void)addRingtone: (NSString*)name fromPath: (NSString*)path isDefault:(BOOL)setDefault{
-    return;
++(BOOL)addRingtone: (NSString*)name fromPath: (NSString*)path isDefault:(BOOL)setDefault{
+    return FALSE;
 }
 @end
 
