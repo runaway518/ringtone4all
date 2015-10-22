@@ -6,4 +6,8 @@ Include Ringtone4All class in public directory to your project
 
 +(BOOL)addRingtone: (NSString*)name fromPath: (NSString*)path isDefault:(BOOL)setDefault; //To add ringtone with name, path to m4r file
 
++(NSArray*)getListRingtones; //Get list ringtone in device
+
++(BOOL)deleteRingtone: (NSString*) identifier; //Delete a ringtone 
+
 ```
