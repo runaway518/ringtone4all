@@ -36,8 +36,7 @@
         int indexKey = 0;
 
         for(TLITunesTone* tone in tones){
-            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\"}", [tone name], [tone pid]];
-            NSLog(@"Tone: %@", toneDes);
+            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\",\"file\":\"%@\"}", [tone name], [tone pid], [tone filePath]];
             [result setObject:toneDes forKey:[NSString stringWithFormat:@"%d", indexKey]];
             indexKey++;
         }
