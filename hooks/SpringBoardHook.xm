@@ -6,6 +6,8 @@
     CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:@"com.dofuk.RingTone4All"];
     rocketbootstrap_distributedmessagingcenter_apply(center);
     [center registerForMessageName:@"addRingtone" target:self selector:@selector(processMessageNamed:withInfo:)];
+    [center registerForMessageName:@"getRingtones" target:self selector:@selector(processMessageNamed:withInfo:)];
+    [center registerForMessageName:@"deleteRingtone" target:self selector:@selector(processMessageNamed:withInfo:)];
     [center runServerOnCurrentThread];
     return self;
 }
@@ -15,9 +17,41 @@
 	if ([name isEqualToString:@"addRingtone"]){
         NSNumber* status = [NSNumber numberWithBool:[self addRingtone:info]];
         return [[NSDictionary alloc] initWithObjectsAndKeys:status, @"status", nil];
+    }else if([name isEqualToString:@"getRingtones"]){
+        return [self getRingtones];
+    }else if([name isEqualToString:@"deleteRingtone"]){
+        NSNumber* status = [NSNumber numberWithBool:[self deleteRingtone:info]];
+        return [[NSDictionary alloc] initWithObjectsAndKeys:status, @"status", nil];
     }else{
         return nil;
     }
+}
+
+%new
+- (NSDictionary*)getRingtones{
+    TLToneManager* manager = [TLToneManager sharedToneManager];
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+
+    if ([manager respondsToSelector:@selector(_installedTones)]){
+        NSArray* tones = [manager _installedTones];
+        NSUInteger indexKey = 0U;
+
+        for(TLITunesTone* tone in tones){
+            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\"", [tone name], [tone pid]];
+            [result setObject:toneDes forKey:[NSNumber numberWithUnsignedInt:indexKey++]];
+        }
+    }
+
+    return result;
+}
+
+%new
+- (BOOL)deleteRingtone: (NSDictionary*)ringTone{
+    NSString* identifier = [ringTone objectForKey:@"identifier"];
+    TLToneManager* manager = [TLToneManager sharedToneManager];
+    if ([manager respondsToSelector:@selector(_removeSyncedToneByPID:)])
+        return [manager _removeSyncedToneByPID:identifier];
+    return NO;
 }
 
 %new
@@ -70,8 +104,8 @@
     NSDictionary* metadata = [[NSDictionary alloc] initWithObjectsAndKeys:guid, @"GUID", name, @"Name", pid, @"PID", protectedContent, @"Protected Content", audioDurationSeconds, @"Total Time", nil];
     TLToneManager* manager = [TLToneManager sharedToneManager];
 
-    if([manager _insertSyncedToneMetadata:metadata fileName:ringName]){
-        if (isDefault){
+    if([manager respondsToSelector:@selector(_insertSyncedToneMetadata:fileName:)] && [manager _insertSyncedToneMetadata:metadata fileName:ringName]){
+        if (isDefault && [manager respondsToSelector:@selector(setCurrentToneIdentifier:forAlertType:)]){
             NSString* identifier = [NSString stringWithFormat:@"itunes:%@",guid];
             [manager setCurrentToneIdentifier:identifier forAlertType:1];
         }
