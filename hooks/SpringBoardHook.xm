@@ -31,14 +31,15 @@
 - (NSDictionary*)getRingtones{
     TLToneManager* manager = [TLToneManager sharedToneManager];
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-
     if ([manager respondsToSelector:@selector(_installedTones)]){
         NSArray* tones = [manager _installedTones];
-        NSUInteger indexKey = 0U;
+        int indexKey = 0;
 
         for(TLITunesTone* tone in tones){
-            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\"", [tone name], [tone pid]];
-            [result setObject:toneDes forKey:[NSNumber numberWithUnsignedInt:indexKey++]];
+            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\"}", [tone name], [tone pid]];
+            NSLog(@"Tone: %@", toneDes);
+            [result setObject:toneDes forKey:[NSString stringWithFormat:@"%d", indexKey]];
+            indexKey++;
         }
     }
 
