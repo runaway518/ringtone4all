@@ -29,7 +29,15 @@
 
 %new
 - (NSDictionary*)getRingtones{
-    TLToneManager* manager = [TLToneManager sharedToneManager];
+    TLToneManager* manager;
+    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+        manager = [TLToneManager sharedToneManager];
+    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+        manager = [TLToneManager sharedRingtoneManager];
+    }else{
+        return nil;
+    }
+
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     if ([manager respondsToSelector:@selector(_installedTones)]){
         NSArray* tones = [manager _installedTones];
@@ -48,7 +56,15 @@
 %new
 - (BOOL)deleteRingtone: (NSDictionary*)ringTone{
     NSString* identifier = [ringTone objectForKey:@"identifier"];
-    TLToneManager* manager = [TLToneManager sharedToneManager];
+    TLToneManager* manager;
+    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+        manager = [TLToneManager sharedToneManager];
+    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+        manager = [TLToneManager sharedRingtoneManager];
+    }else{
+        return NO;
+    }
+
     if ([manager respondsToSelector:@selector(_removeSyncedToneByPID:)])
         return [manager _removeSyncedToneByPID:identifier];
     return NO;
@@ -102,7 +118,16 @@
     }
 
     NSDictionary* metadata = [[NSDictionary alloc] initWithObjectsAndKeys:guid, @"GUID", name, @"Name", pid, @"PID", protectedContent, @"Protected Content", audioDurationSeconds, @"Total Time", nil];
-    TLToneManager* manager = [TLToneManager sharedToneManager];
+
+    TLToneManager* manager;
+    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+        manager = [TLToneManager sharedToneManager];
+    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+        manager = [TLToneManager sharedRingtoneManager];
+    }else{
+        return NO;
+    }
+
 
     if([manager respondsToSelector:@selector(_insertSyncedToneMetadata:fileName:)] && [manager _insertSyncedToneMetadata:metadata fileName:ringName]){
         if (isDefault && [manager respondsToSelector:@selector(setCurrentToneIdentifier:forAlertType:)]){

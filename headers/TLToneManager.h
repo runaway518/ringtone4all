@@ -9,6 +9,7 @@
 + (BOOL)_migrateLegacyToneSettings;
 + (id)_systemWideTonePreferenceKeyForAlertType:(int)arg1;
 + (id)sharedToneManager;
++ (id)sharedRingtoneManager;
 
 - (id)_accessQueue;
 - (BOOL)_addToneEntries:(id)arg1 toManifestAtPath:(id)arg2 mediaDirectory:(id)arg3 shouldSkipReload:(BOOL)arg4;
