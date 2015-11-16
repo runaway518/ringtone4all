@@ -137,6 +137,14 @@
         return YES;
     }
 
+    if([manager respondsToSelector:@selector(insertSyncedToneMetadata:fileName:)] && [manager insertSyncedToneMetadata:metadata fileName:ringName]){
+        if (isDefault && [manager respondsToSelector:@selector(setCurrentToneIdentifier:forAlertType:)]){
+            NSString* identifier = [NSString stringWithFormat:@"itunes:%@",guid];
+            [manager setCurrentToneIdentifier:identifier forAlertType:1];
+        }
+        return YES;
+    }
+
     return NO;
 }
 %end
