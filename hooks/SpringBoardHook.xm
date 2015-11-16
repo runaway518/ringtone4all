@@ -48,6 +48,15 @@
             [result setObject:toneDes forKey:[NSString stringWithFormat:@"%d", indexKey]];
             indexKey++;
         }
+    }else if([manager respondsToSelector:@selector(installedTones)]){
+        NSArray* tones = [manager installedTones];
+        int indexKey = 0;
+
+        for(TLITunesTone* tone in tones){
+            NSString* toneDes = [NSString stringWithFormat:@"{\"name\":\"%@\",\"identifier\":\"%@\",\"file\":\"%@\"}", [tone name], [tone pid], [tone filePath]];
+            [result setObject:toneDes forKey:[NSString stringWithFormat:@"%d", indexKey]];
+            indexKey++;
+        }
     }
 
     return result;
@@ -67,6 +76,10 @@
 
     if ([manager respondsToSelector:@selector(_removeSyncedToneByPID:)])
         return [manager _removeSyncedToneByPID:identifier];
+    
+    if ([manager respondsToSelector:@selector(deleteSyncedToneByPID:)])
+        return [manager deleteSyncedToneByPID:identifier];
+
     return NO;
 }
 
