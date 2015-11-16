@@ -46,7 +46,9 @@
 - (id)_iTunesTonesByIdentifier;
 - (BOOL)_insertPurchasedToneMetadata:(id)arg1 fileName:(id)arg2;
 - (BOOL)_insertSyncedToneMetadata:(id)arg1 fileName:(id)arg2;
+- (BOOL)insertSyncedToneMetadata:(id)arg1 fileName:(id)arg2;
 - (id)_installedTones;
+- (id)installedTones;
 - (unsigned long long)_installedTonesSize;
 - (void)_loadAlertToneInfo;
 - (void)_loadITunesRingtoneInfoPlistAtPath:(id)arg1;
@@ -63,6 +65,7 @@
 - (void)_registerDidRequestResetSyncPostAccidentalToneDeletion;
 - (void)_reloadITunesRingtonesAfterExternalChange;
 - (void)_removeAllSyncedData;
+- (BOOL)deleteSyncedToneByPID:(id)arg1;;
 - (int)_removeOrphanedManifestEntriesReturningFilePathsForFoundOrphans:(id*)arg1;
 - (id)_removeOrphanedPlistEntriesInManifestAtPath:(id)arg1 mediaDirectory:(id)arg2;
 - (BOOL)_removeSyncedToneByPID:(id)arg1;
