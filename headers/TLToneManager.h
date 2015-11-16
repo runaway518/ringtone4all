@@ -46,7 +46,7 @@
 - (id)_iTunesTonesByIdentifier;
 - (BOOL)_insertPurchasedToneMetadata:(id)arg1 fileName:(id)arg2;
 - (BOOL)_insertSyncedToneMetadata:(id)arg1 fileName:(id)arg2;
-- (BOOL)insertSyncedToneMetadata:(id)arg1 fileName:(id)arg2;
+- (BOOL)insertSyncedToneMetadata:(id)arg1 filename:(id)arg2;
 - (id)_installedTones;
 - (id)installedTones;
 - (unsigned long long)_installedTonesSize;

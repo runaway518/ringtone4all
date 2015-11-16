@@ -30,9 +30,9 @@
 %new
 - (NSDictionary*)getRingtones{
     TLToneManager* manager;
-    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+    if ([TLToneManager respondsToSelector:@selector(sharedToneManager)]){
         manager = [TLToneManager sharedToneManager];
-    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+    }else if ([TLToneManager respondsToSelector:@selector(sharedRingtoneManager)]){
         manager = [TLToneManager sharedRingtoneManager];
     }else{
         return nil;
@@ -66,9 +66,9 @@
 - (BOOL)deleteRingtone: (NSDictionary*)ringTone{
     NSString* identifier = [ringTone objectForKey:@"identifier"];
     TLToneManager* manager;
-    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+    if ([TLToneManager respondsToSelector:@selector(sharedToneManager)]){
         manager = [TLToneManager sharedToneManager];
-    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+    }else if ([TLToneManager respondsToSelector:@selector(sharedRingtoneManager)]){
         manager = [TLToneManager sharedRingtoneManager];
     }else{
         return NO;
@@ -92,7 +92,8 @@
     NSFileManager* fileManeger = [NSFileManager defaultManager];
 
     //Check path exists
-    if(![fileManeger fileExistsAtPath:path]){
+    if(![fileManeger fileExistsAtPath:path]){  
+        NSLog(@"[RingTone4All] File is not found!");
         return NO;
     }
 
@@ -127,17 +128,19 @@
 
     [fileManeger copyItemAtPath:path toPath:ringTonePath error:nil];
     if (![fileManeger fileExistsAtPath:ringTonePath]){
+        NSLog(@"[RingTone4All] File is not copy!");
         return NO;
     }
 
     NSDictionary* metadata = [[NSDictionary alloc] initWithObjectsAndKeys:guid, @"GUID", name, @"Name", pid, @"PID", protectedContent, @"Protected Content", audioDurationSeconds, @"Total Time", nil];
 
     TLToneManager* manager;
-    if ([TLToneManager instancesRespondToSelector:@selector(sharedToneManager)]){
+    if ([TLToneManager respondsToSelector:@selector(sharedToneManager)]){
         manager = [TLToneManager sharedToneManager];
-    }else if ([TLToneManager instancesRespondToSelector:@selector(sharedRingtoneManager)]){
+    }else if ([TLToneManager respondsToSelector:@selector(sharedRingtoneManager)]){
         manager = [TLToneManager sharedRingtoneManager];
     }else{
+        NSLog(@"[RingTone4All] System is not support! Can't create instance!");
         return NO;
     }
 
@@ -150,13 +153,15 @@
         return YES;
     }
 
-    if([manager respondsToSelector:@selector(insertSyncedToneMetadata:fileName:)] && [manager insertSyncedToneMetadata:metadata fileName:ringName]){
+    if([manager respondsToSelector:@selector(insertSyncedToneMetadata:filename:)] && [manager insertSyncedToneMetadata:metadata filename:ringName]){
         if (isDefault && [manager respondsToSelector:@selector(setCurrentToneIdentifier:forAlertType:)]){
             NSString* identifier = [NSString stringWithFormat:@"itunes:%@",guid];
             [manager setCurrentToneIdentifier:identifier forAlertType:1];
         }
         return YES;
     }
+
+    NSLog(@"[RingTone4All] System is not support! Function is not found");
 
     return NO;
 }
